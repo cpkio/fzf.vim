@@ -1159,7 +1159,7 @@ function! s:commits(buffer_local, args)
   let command = a:buffer_local ? 'BCommits' : 'Commits'
   let expect_keys = join(keys(get(g:, 'fzf_action', s:default_action)), ',')
   let options = {
-  \ 'source':  source,
+  \ 'source':  split(system(source), '\n'),
   \ 'sink*':   s:function('s:commits_sink'),
   \ 'options': s:reverse_list(['--ansi', '--multi', '--tiebreak=index',
   \   '--inline-info', '--prompt', command.'> ', '--bind=ctrl-s:toggle-sort',
