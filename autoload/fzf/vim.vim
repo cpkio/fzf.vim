@@ -113,8 +113,10 @@ function! fzf#vim#with_preview(...)
     let preview += ['--preview-window', window]
   endif
 
-  let preview_special = get(spec, 'preview_specials', '')
-  let preview += ['--preview', &shell . ' ' . &shellcmdflag . ' IF EXIST ' . placeholder . ' ('. $FZF_PREVIEW_COMMAND . ' ' .preview_special . ' ' . placeholder . ') ELSE ( echo ''No file found for preview'' )']
+  if len(placeholder)
+    let preview_special = get(spec, 'preview_specials', '')
+    let preview += ['--preview', &shell . ' ' . &shellcmdflag . ' IF EXIST ' . placeholder . ' ('. $FZF_PREVIEW_COMMAND . ' ' .preview_special . ' ' . placeholder . ') ELSE ( echo ''No file found for preview'' )']
+  end
 
   if len(args)
     call extend(preview, ['--bind', join(map(args, 'v:val.":toggle-preview"'), ',')])
