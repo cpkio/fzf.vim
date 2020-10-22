@@ -1017,6 +1017,31 @@ function! fzf#vim#marks(...)
 endfunction
 
 " ------------------------------------------------------------------
+" Registers
+" ------------------------------------------------------------------
+function! s:format_register(line)
+  return substitute(substitute(a:line, '^"', '', ''), '\S', '\=s:yellow(submatch(0), "Reg")','')
+endfunction
+
+function! s:register_sink(lines)
+  for line in a:lines[1:] 
+    execute 'silent put '.matchstr(line, '\S')
+  endfor
+endfunction
+
+function! fzf#vim#registers(...)
+  redir => cout
+  silent registers
+  redir END
+  let reglist = split(cout, "\n")
+  return s:fzf('registers', {
+  \ 'source':  extend(['Reg Content'], map(reglist[1:], 's:format_register(v:val)')),
+  \ 'sink*':   s:function('s:register_sink'),
+  \ 'options': ['+m', '-x', '--ansi', '--multi', '--tiebreak=index', '--header-lines=1', '--tiebreak=begin', '--prompt', "Registers> "]
+  \ }, a:000)
+endfunction
+
+" ------------------------------------------------------------------
 " Help tags
 " ------------------------------------------------------------------
 function! s:helptag_sink(line)
