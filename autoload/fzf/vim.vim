@@ -76,8 +76,6 @@ endfunction
 
 " [[spec to wrap], [preview window expression], [toggle-preview keys...]]
 function! fzf#vim#with_preview(...)
-  let bash_path = exepath('bash')
-  let is_wsl_bash = bash_path =~? 'Windows[/\\]system32[/\\]bash.exe$'
   " Default spec
   let spec = {}
   let window = ''
@@ -90,9 +88,9 @@ function! fzf#vim#with_preview(...)
     call remove(args, 0)
   endif
 
-  if empty(bash_path)
+  if empty('&shell')
     if !s:warned
-      call s:warn('Preview window not supported (bash not found in PATH)')
+      call s:warn('Preview window not supported (shell not defined)')
       let s:warned = 1
     endif
     return spec
@@ -114,14 +112,9 @@ function! fzf#vim#with_preview(...)
   if len(window)
     let preview += ['--preview-window', window]
   endif
-  if s:is_win
-    let preview_cmd = 'bash '.(is_wsl_bash
-    \ ? substitute(substitute(s:bin.preview, '^\([A-Z]\):', '/mnt/\L\1', ''), '\', '/', 'g')
-    \ : escape(s:bin.preview, '\'))
-  else
-    let preview_cmd = fzf#shellescape(s:bin.preview)
-  endif
-  let preview += ['--preview', preview_cmd.' '.placeholder]
+
+  let preview_special = get(spec, 'preview_specials', '')
+  let preview += ['--preview', &shell . ' ' . &shellcmdflag . ' IF EXIST ' . placeholder . ' ('. $FZF_PREVIEW_COMMAND . ' ' .preview_special . ' ' . placeholder . ') ELSE ( echo ''No file found for preview'' )']
 
   if len(args)
     call extend(preview, ['--bind', join(map(args, 'v:val.":toggle-preview"'), ',')])
