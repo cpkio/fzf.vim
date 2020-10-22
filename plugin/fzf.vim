@@ -62,7 +62,7 @@ call s:defs([
 \'command!      -bang -nargs=* BTags                     call fzf#vim#buffer_tags(<q-args>, s:p(<bang>0, { "placeholder": "{2}:{3}" }), <bang>0)',
 \'command! -bar -bang Snippets                           call fzf#vim#snippets(<bang>0)',
 \'command! -bar -bang Commands                           call fzf#vim#commands(<bang>0)',
-\'command! -bar -bang Marks                              call fzf#vim#marks(<bang>0)',
+\'command! -bar -bang Marks                              call fzf#vim#marks(s:p(<bang>0, { "placeholder": "{4}" }), <bang>0)',
 \'command! -bar -bang Helptags                           call fzf#vim#helptags(<bang>0)',
 \'command! -bar -bang Windows                            call fzf#vim#windows(<bang>0)',
 \'command! -bar -bang Commits                            call fzf#vim#commits(<bang>0)',
