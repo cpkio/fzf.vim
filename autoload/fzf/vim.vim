@@ -1047,7 +1047,7 @@ function! fzf#vim#registers(...)
   redir END
   let reglist = split(cout, "\n")
   return s:fzf('registers', {
-  \ 'source':  extend([':: ' . s:magenta('Enter', 'Special') . ' to paste linewise after cursor, ' . s:magenta('CTRL-P', 'Special') . 'to paste before', 'Reg Content'], map(reglist[1:], 's:format_register(v:val)')),
+  \ 'source':  extend([':: ' . s:magenta('Enter', 'Special') . ' to paste linewise after cursor, ' . s:magenta('CTRL-P', 'Special') . ' to paste before', 'Reg Content'], map(reglist[1:], 's:format_register(v:val)')),
   \ 'sink*':   s:function('s:register_sink'),
   \ 'options': ['+m', '-x', '--ansi', '--expect=ctrl-p','--multi', '--tiebreak=index', '--header-lines=2', '--tiebreak=begin', '--prompt', "Registers> "]
   \ }, a:000)
