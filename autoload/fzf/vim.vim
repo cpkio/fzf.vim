@@ -1026,9 +1026,19 @@ function! s:format_register(line)
 endfunction
 
 function! s:register_sink(lines)
-  for line in a:lines[1:] 
-    execute 'silent put '.matchstr(line, '\S')
-  endfor
+  if !empty(a:lines)
+    let key = a:lines[0]
+    echo a:lines[0]
+    if key == 'ctrl-p'
+      for line in a:lines[1:]
+        execute 'silent put! '.matchstr(line, '\S')
+      endfor
+    else
+      for line in a:lines[1:]
+        execute 'silent put '.matchstr(line, '\S')
+      endfor
+    endif
+  endif
 endfunction
 
 function! fzf#vim#registers(...)
@@ -1037,9 +1047,9 @@ function! fzf#vim#registers(...)
   redir END
   let reglist = split(cout, "\n")
   return s:fzf('registers', {
-  \ 'source':  extend(['Reg Content'], map(reglist[1:], 's:format_register(v:val)')),
+  \ 'source':  extend([':: ' . s:magenta('Enter', 'Special') . ' to paste linewise after cursor, ' . s:magenta('CTRL-P', 'Special') . 'to paste before', 'Reg Content'], map(reglist[1:], 's:format_register(v:val)')),
   \ 'sink*':   s:function('s:register_sink'),
-  \ 'options': ['+m', '-x', '--ansi', '--multi', '--tiebreak=index', '--header-lines=1', '--tiebreak=begin', '--prompt', "Registers> "]
+  \ 'options': ['+m', '-x', '--ansi', '--expect=ctrl-p','--multi', '--tiebreak=index', '--header-lines=2', '--tiebreak=begin', '--prompt', "Registers> "]
   \ }, a:000)
 endfunction
 
