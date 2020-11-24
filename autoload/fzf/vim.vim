@@ -288,7 +288,7 @@ endfunction
 function! s:fill_quickfix(list, ...)
   if len(a:list) > 1
     call setqflist(a:list)
-    copen
+    botright copen
     wincmd p
     if a:0
       execute a:1
