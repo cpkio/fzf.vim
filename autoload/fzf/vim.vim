@@ -333,7 +333,7 @@ function! fzf#vim#files(dir, ...)
     let dir = s:shortpath()
   endif
 
-  let args.options = ['-m', '--prompt', strwidth(dir) < &columns / 2 - 20 ? dir . '> ' : '> ']
+  let args.options = ['-m', '--prompt', strwidth(dir) < &columns / 2 - 20 ? dir : '> ']
   call s:merge_opts(args, get(g:, 'fzf_files_options', []))
   return s:fzf('files', args, a:000)
 endfunction
@@ -1022,7 +1022,7 @@ endfunction
 " Registers
 " ------------------------------------------------------------------
 function! s:format_register(line)
-  return substitute(substitute(a:line, '^"', '', ''), '\S', '\=s:yellow(submatch(0), "Reg")','')
+  return substitute(substitute(a:line, '^\s*[cl]\s*"', '', ''), '\S', '\=s:yellow(submatch(0), "Reg")','')
 endfunction
 
 function! s:register_sink(lines)
